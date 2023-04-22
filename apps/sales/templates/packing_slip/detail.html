@@ -1,0 +1,18 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+
+{% if order.packing_slip_file %}
+<script>
+    function printPDF(docPath) {
+        var openedWindow = window.open(docPath);
+        openedWindow.onload = function() {openedWindow.print()};
+    };
+</script>
+<button type="button" style="text-align: right;" onclick="printPDF('{{ order.packing_slip_file.url }}','_blank');">Print PDF file</button>
+{% else %}
+<button type="button" style="text-align: right;" disabled>PDF file not created yet</button>
+{% endif %}
+
+{% include 'packing_slip/packing_slip.html' %}
+{% endblock %}

@@ -1,0 +1,88 @@
+version: '3.9'
+
+services:
+  django:
+    image: django_backoffice
+    build:
+      context: .
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:5000
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+      - DATABASE_HOST=postgres
+      - BROKER_HOST=rabbitmq
+      # - DEBUG=TRUE
+    volumes:
+      - .:/opt/django_backoffice
+      - static_volume:/opt/static_files
+      - media_volume:/opt/django_backoffice/media
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - postgres
+    ports:
+      - 8000:8000
+    networks:
+      - local
+
+  celery:
+    image: django_backoffice
+    build:
+      context: .
+    command: celery -A core worker -l INFO
+    environment:
+      - DEBUG=TRUE
+      - DATABASE_HOST=postgres
+      - BROKER_HOST=rabbitmq
+    volumes:
+      - .:/opt/django_backoffice
+      - static_volume:/opt/django_backoffice/static_files
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - postgres
+    networks:
+      - local
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=django_backoffice
+      - POSTGRES_PASSWORD=django_backoffice
+      - POSTGRES_DB=django_backoffice
+    networks:
+      - local
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - local
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./.nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/opt/django_backoffice/static_files
+      - media_volume:/opt/django_backoffice/media_files
+    restart: on-failure
+    ports:
+      - 80:80
+    networks:
+      - local
+
+volumes:
+  postgres:
+  static_volume:
+  media_volume:
+
+networks:
+  local:
+    driver: bridge

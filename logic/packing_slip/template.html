@@ -1,0 +1,212 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <title>Packing Slip</title>
+</head>
+
+<body>
+  <style>
+    .logo {
+      object-fit: contain;
+      max-width: 180px;
+      height: auto;
+    }
+
+    header {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 30 0 30 316;
+    }
+
+    body {
+      margin: 0in 0in 0in 0in;
+      width: 8.5in;
+      height: 11in;
+    }
+
+    * {
+      font-family: arial;
+      font-size: 12px;
+    }
+
+    th {
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .store-info div {
+      font-size: 1.2em;
+    }
+
+    .store-info div.company-name {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    table.order-info td {
+
+      padding: 2px 4px 2px 4px;
+    }
+
+    table.order-info tr td.label {
+      font-weight: bold;
+      text-align: right;
+      border-right: solid 1px #c0c0c0;
+
+    }
+
+    table.order-info tr td.label.first {}
+
+    table.order-info tr td.label.last {}
+
+    table.line-items {
+      margin-top: 0.1in;
+      padding: 0.1in 0in 0.1in 0in;
+    }
+
+    table.line-items th {
+      padding: 2px;
+    }
+
+    table.footer {
+      border-top: solid 1px #707070;
+    }
+
+    table.footer td.label {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    td.notes {
+      padding: 0.1in;
+      font-style: italic;
+    }
+
+    .barcode {
+      font-family: "Free 3 of 9 Extended";
+      font-size: 48pt;
+    }
+  </style>
+
+  <header>
+    <img class="logo" src="./snowboarding-logo.jpg"><br>
+  </header>
+  <table cellspacing="0" cellpadding="2" border="0" style="width:8.5in">
+    <thead>
+      <tr>
+        <th colspan="3">
+          Packing Slip
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2" style="width:4.5in" class="store-info">
+          <div class="company-name">Snow Extreme Sports</div>
+          <div>10320 W 74th Terrace.<br>Shawnee, KS 66203</div>
+        </td>
+        <td style="width:3.5in;" align="right" valign="top">
+
+        </td>
+      </tr>
+      <tr>
+        <td style="height:0.15in"></td>
+      </tr>
+      <tr>
+        <td align="right" style="width:1in">
+          <b>Ship To:</b>
+        </td>
+        <td style="width:3.5in; font-size:14px">
+          <div>{{ customer.name }}</div>
+          <div>{{ customer.address }}</div>
+        </td>
+        <td style="width:2.5in">
+          <table cellspacing="0" border="0" class="order-info">
+            <tbody><tr>
+              <td align="right" class="label first">Order #</td>
+              <td>{{ order.id }}</td>
+            </tr>
+            <tr>
+              <td align="right" class="label">Date</td>
+              <td>{{ order.created_at }}</td>
+            </tr>
+            <tr>
+              <td align="right" class="label last">Ship Date</td>
+              <td>{{ order.ship_date }}</td>
+            </tr>
+          </tbody></table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table cellspacing="0" cellpadding="2" border="0" style="width:100%" class="line-items">
+    <thead>
+      <tr>
+        <th align="left" style="width:1.5in" class="sku">
+          Item SKU
+        </th>
+        <th align="left">
+          Item
+        </th>
+        <th align="right" style="width:0.75in" class="price">
+          Price
+        </th>
+        <th align="center" style="width:0.75in">
+          Qty
+        </th>
+        <th align="right" style="width:0.75in" class="price">
+          Ext. Price
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="sku">{{ ordered_product.product.sku }}</td>
+        <td>{{ ordered_product.product.name }}</td>
+        <td align="right" class="price">{{ ordered_product.product.price }}</td>
+        <td align="center">{{ ordered_product.quantity }}</td>
+        <td align="right" class="price">{{ ordered_product.total_price }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+      {{ order.notes_to_customer }}
+    </p><table cellspacing="0" cellpadding="2" border="0" style="width:100%" class="footer">
+    
+    <tbody>
+      <tr>
+        <td align="right" class="label price">
+          Sub Total:
+        </td>
+        <td style="width:0.75in" align="right" class="price">{{ order.order_total_price }}</td>
+      </tr>
+      <tr>
+        </tr><tr class="tax">
+          <td align="right" class="label price">
+            Tax:
+          </td>
+          <td style="width:0.75in" align="right" class="price">{{ order.total_tax }}</td>
+        </tr>
+        <tr>
+          <td align="right" class="label price">
+            Shipping:
+          </td>
+          <td style="width:0.75in" align="right" class="price">{{ order.total_ship }}</td>
+        </tr>
+        <tr>
+          <td align="right" class="label price">
+            Total:
+          </td>
+          <td style="width:0.75in" align="right" class="price">{{ order.order_total_price }}</td>
+        </tr>
+    </tbody>
+  </table>
+</body>
+</html>

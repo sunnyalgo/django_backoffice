@@ -1,0 +1,12 @@
+# external libs
+psycopg2==2.9.5
+pdfkit==1.0.0
+
+# django requirements
+gunicorn==20.1.0
+celery==5.2.7
+Django==4.1.7
+
+# better shells for debug
+ipython==8.11.0
+django-extensions==3.2.1
